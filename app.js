@@ -9,27 +9,65 @@ GAME RULES:
 
 */
 var roundScore,activePlayer,score,isGaming;
-roundScore=0;
-activePlayer=0;
-
+init();
 
 document.querySelector('.btn-roll').addEventListener('click',function(){
-var dice=Math.floor(Math.random()*6)+1;
-document.querySelector('img').src='dice-'+dice+'.png';
-if(dice!==1){
-	roundScore+=dice;
+	if(isGaming){
+		var dice=Math.floor(Math.random()*6)+1;
+	document.querySelector('img').src='dice-'+dice+'.png';
+	if(dice!==1){
+		roundScore+=dice;
     document.querySelector('#current-'+activePlayer).innerHTML=roundScore;
+	}
+	else{
+	
+	nextPlayer();
+	}
+
 }
-else{
-	roundScore=0;
-	document.querySelector('#current-'+activePlayer).innerHTML=roundScore;
-	activePlayer=(activePlayer+1)%2
-}
+
+	
 });
 
-document.querySelector('.btn-new').addEventListener('click',function(){
-console.log('clicked new');
-});
 document.querySelector('.btn-hold').addEventListener('click',function(){
-console.log('clicked hold');
+	score[activePlayer]+=roundScore
+	document.querySelector('#score-'+activePlayer).innerHTML=score[activePlayer];
+	if(score[activePlayer]>=20){
+		
+		document.querySelector('#score-'+activePlayer).innerHTML="Winner!";
+		document.querySelector('.player-0-panel').classList.remove('active');
+		document.querySelector('.player-1-panel').classList.remove('active');
+		document.querySelector('.player-'+activePlayer+'-panel').classList.add('winner');
+		isGaming=false;
+		
+
+	}
+	else{
+		nextPlayer();
+	}
+	
+
 });
+
+function nextPlayer(){
+	roundScore=0;
+	activePlayer=(activePlayer+1)%2
+	document.querySelector('#current-0').innerHTML=0;
+	document.querySelector('#current-1').innerHTML=0;
+	document.querySelector('.player-0-panel').classList.toggle('active');
+	document.querySelector('.player-1-panel').classList.toggle('active');
+}
+function init(){
+	isGaming=true;
+	roundScore=0;
+	activePlayer=0;
+	score=[0,0];
+	document.querySelector('#score-0').innerHTML=0
+	document.querySelector('#score-1').innerHTML=0;
+	document.querySelector('#current-0').innerHTML=0;
+	document.querySelector('#current-1').innerHTML=0;
+	}
+
+
+
+document.querySelector('.btn-new').addEventListener('click',init);
